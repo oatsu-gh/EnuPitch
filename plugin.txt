@@ -1,0 +1,2 @@
+name=EnuPitch v0.0.1
+execute=.\enupitch.bat
