@@ -12,7 +12,7 @@
 
 ## その他
 
-配布動画 → 
+配布動画 → https://www.nicovideo.jp/watch/sm40920519
 
 ## 連絡先
 
