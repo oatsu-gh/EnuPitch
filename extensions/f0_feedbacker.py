@@ -145,6 +145,19 @@ def note_times_ms(ust):
     return l_start_end
 
 
+def repair_pitch_fall_near_restnote(ust):
+    """休符前で音程が低くなるのを直す。
+    休符直前のノートの最後のピッチ点のPBYと、
+    休符の最初のピッチ点のPBYを0にする
+    """
+    for note_now, note_next in zip(ust.notes[:-1], ust.notes[1:]):
+        if 'R' in note_next.lyric:
+            note_now.pby = \
+                note_now.pby[:-2] + [max(0, note_now.pby[-2]), 0]
+            note_next.pby = \
+                [max(0, note_next.pby[0])] + note_next.pby[1:]
+
+
 def main(path_f0, path_plugin):
     """Test
     """
@@ -197,6 +210,9 @@ def main(path_f0, path_plugin):
         # 今のノートのPBS
         offset = (note_prev.pbs[0] + sum(note_prev.pbw)) - note_prev.length_ms
         note.pbs = [offset, 0]
+
+    # 休符前で音程が下がるのを修正
+    repair_pitch_fall_near_restnote(ust)
 
     # ファイル出力
     print('完了しました。上書き保存します。')
