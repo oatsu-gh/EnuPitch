@@ -71,7 +71,7 @@ def create_plugin_txt(path_out, version):
     """
     プラグインの各フォルダに plugin.txt を作成する。
     """
-    s = '\n'.join([f'name=EnuPitch v{version},
+    s = '\n'.join([f'name=EnuPitch v{version}',
                    r'execute=.\enupitch.bat'])
     with open(path_out, 'w', encoding='cp932') as f:
         f.write(s)
