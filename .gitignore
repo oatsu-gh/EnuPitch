@@ -1,1 +1,8 @@
 __pycache__
+nnsvs-*
+HN-UnifiedSourceFilterGAN-*
+SiFiGAN-*
+*.wav
+*.ust
+*.tmp
+

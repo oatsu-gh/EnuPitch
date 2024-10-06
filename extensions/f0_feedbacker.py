@@ -88,16 +88,6 @@ def reduce_f0_points_for_a_note(f0_list, time_list):
     # 最初と最後と極値のindex (残すf0点のみ)
     reduced_f0_indices = [0] + extremum_f0_indices + [len(f0_list) - 1]
 
-    # 変曲点を使う場合↓------------------------------------
-    # # 変曲点のindexを取り出す
-    # inflection_f0_indices = \
-    #     list(argrelmax(np.array(delta_f0_freq))[0]) + \
-    #     list(argrelmin(np.array(delta_f0_freq))[0])
-    # 最初と最後と極値と変曲点のindex (残すf0点のみ)
-    # reduced_f0_indices = [0] + extremum_f0_indices + \
-    # inflection_f0_indices + [len(f0_list) - 1]
-    # -------------------------------------------------------
-
     # 重複する要素を削除
     reduced_f0_indices = list(set(reduced_f0_indices))
     # 順番がめちゃくちゃなので並べなおす
@@ -148,7 +138,8 @@ def note_times_ms(ust):
 def repair_pitch_fall_near_restnote(ust):
     """休符前で音程が低くなるのを直す。
     休符直前のノートの最後のピッチ点のPBYと、
-    休符の最初のピッチ点のPBYを0にする
+    休符の最初のピッチ点のPBYを0にする。
+    また、休符のピッチをなくす。
     """
     for note_now, note_next in zip(ust.notes[:-1], ust.notes[1:]):
         if 'R' in note_next.lyric:
@@ -156,6 +147,10 @@ def repair_pitch_fall_near_restnote(ust):
                 note_now.pby[:-2] + [max(0, note_now.pby[-2]), 0]
             note_next.pby = \
                 [max(0, note_next.pby[0])] + note_next.pby[1:]
+        if 'R' in note_now.lyric:
+            note_now['PBS'] = "0;0"
+            note_now['PBY'] = "0"
+            note_now['PBW'] = "40"
 
 
 def main(path_f0, path_plugin):
@@ -223,9 +218,10 @@ def main(path_f0, path_plugin):
 
 
 if __name__ == '__main__':
+    print('f0_feedbacker.py (2024-09-27) ---------------------------')
     parser = ArgumentParser()
     parser.add_argument('--f0', help='f0.csvのパス')
-    parser.add_argument('--feedback', help='UTAUにフィード縛するために上書きするtmpファイル')
+    parser.add_argument('--feedback', help='UTAUにフィードバックするために上書きするtmpファイル')
     # 使わない引数は無視
     args, _ = parser.parse_known_args()
     # 実行引数を渡して処理
