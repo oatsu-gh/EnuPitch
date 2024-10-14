@@ -11,9 +11,11 @@ import re
 from argparse import ArgumentParser
 from copy import copy
 from math import log2
-from pprint import pprint
 
 import utaupy
+
+# from pprint import pprint
+
 
 STYLE_SHIFT_FLAG_PATTERN = re.compile(r'S(\d+|\+\d+|-\d+)')
 
