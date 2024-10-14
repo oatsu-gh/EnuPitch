@@ -252,6 +252,6 @@ def flet_ui(page: ft.Page):
 
 
 if __name__ == "__main__":
-    print('style_selector_with_flet.py (2024-10-06) --------------')
+    print('style_selector_with_flet.py (2024-10-14) --------------')
     ft.app(target=flet_ui)
     print('-------------------------------------------------------')
