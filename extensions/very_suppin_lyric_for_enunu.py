@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2020-2022 oatsu
+# Copyright (c) 2020-2024 oatsu
 """
 超歌詞すっぴんプラグイン
 """
@@ -63,6 +63,19 @@ def suppin_lyric(plugin):
             note.lyric = new_lyric
 
 
+def join_R(plugin):
+    """
+    給付が連続しているときに結合する。
+    """
+    for i, note in enumerate(plugin.notes[:-1]):
+        next_note = plugin.notes[i + 1]
+        if note.lyric == 'R' and next_note.lyric == 'R':
+            # 直後の休符を伸ばす
+            next_note.length += note.length
+            # 今の休符を削除 ([#DELETE] にする)
+            note.delete()
+
+
 def main():
     """
     平仮名にしてからすっぴん化する。
@@ -77,8 +90,12 @@ def main():
     force_lyric_zenkaku_hiragana(plugin)
     replace_special_lyric(plugin)
     suppin_lyric(plugin)
+    join_R(plugin)
     plugin.write(path_plugin)
 
 
 if __name__ == '__main__':
+    print('very_suppin_lyric_for_enunu.py (2024-10-07) -----------')
     main()
+    print('かしを ぜんぶ ひらがなの たんどくおんに したよ')
+    print('-------------------------------------------------------')

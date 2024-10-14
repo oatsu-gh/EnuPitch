@@ -11,9 +11,10 @@ from os import makedirs
 from os.path import basename, dirname, exists, isdir, join, splitext
 from typing import List
 
-KEEP_LATEST_PACKAGES = ['pip', 'setuptools', 'wheel', 'utaupy']
+KEEP_LATEST_PACKAGES = ['pip', 'setuptools',
+                        'wheel', 'utaupy', 'light-the-torch']
 REMOVE_LIST = ['__pycache__', '.mypy']
-PYTHON_DIR = 'python-3.8.10-embed-amd64'
+PYTHON_DIR = 'python-3.12.7-embed-amd64'
 
 
 def pip_install_upgrade(python_exe: str, packages: List[str]):
@@ -22,6 +23,15 @@ def pip_install_upgrade(python_exe: str, packages: List[str]):
     """
     args = [python_exe, '-m', 'pip', 'install', '--upgrade',
             '--no-warn-script-location'] + packages
+    subprocess.run(args, check=True)
+
+
+def pip_uninstall_torch(python_exe: str):
+    """
+    配布前にtorchをアンインストールしておく
+    """
+    args = [python_exe, '-m', 'pip', 'uninstall',
+            'torch', 'torchaudio', 'torchvision']
     subprocess.run(args, check=True)
 
 
@@ -128,16 +138,34 @@ def main():
     pip_install_upgrade(python_exe, KEEP_LATEST_PACKAGES)
     print()
 
+    # torch をアンインストールする
+    print('Uninstalling torch')
+    pip_uninstall_torch(python_exe)
+    print()
+
     # Pythonの実行ファイルをコピーする
     print(f'Copying {python_dir} -> {join(enupitch_release_dir, python_dir)}')
     shutil.copytree(python_dir, join(enupitch_release_dir, python_dir))
 
-    # enupitch.py と hts2wav.py と nnsvs_gen_override.py をコピーする
-    print('Copying python scripts')
+    # フォルダとかスクリプトをコピーする
+    print('Copying scripts and models')
     shutil.copy2('enupitch.py', join(enupitch_release_dir))
     shutil.copy2('install_torch.py', join(enupitch_release_dir))
-    shutil.copytree('enulib', join(enupitch_release_dir, 'enulib'))
-    shutil.copytree('extensions', join(enupitch_release_dir, 'extensions'))
+
+    # 拡張機能とかライブラリのフォルダをコピーする
+    l = [
+        'enulib',
+        'extensions',
+        'model',
+        'nnsvs-master',
+        'HN-UnifiedSourceFilterGAN-nnsvs',
+        'ParallelWaveGAN-nnsvs',
+        'SiFiGAN-nnsvs'
+    ]
+    for p in l:
+        p_tgt = join(enupitch_release_dir, p)
+        print(f'Copying {p} -> {p_tgt}')
+        shutil.copytree(p, p_tgt)
 
     # キャッシュファイルを削除する
     print('Removing cache')
