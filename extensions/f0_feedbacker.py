@@ -210,11 +210,12 @@ def main(path_f0, path_plugin):
     repair_pitch_fall_near_restnote(ust)
 
     # ファイル出力
-    print('完了しました。上書き保存します。')
+    print('TMPファイルを上書きします。')
     # path_ust_out = path_ust.replace('.ust', '_out.ust')
     # ust.setting['Mode2'] = True
     # ust.write(path_ust_out)
     ust.write(path_plugin)
+    print('完了しました。')
 
 
 if __name__ == '__main__':
