@@ -16,7 +16,7 @@ from os.path import abspath, basename, dirname, exists, join, relpath, splitext
 from shutil import move
 from sys import argv
 from tempfile import TemporaryDirectory, mkdtemp
-from typing import Iterable, List, Union
+from typing import Iterable, List
 
 import colored_traceback.always  # pylint: disable=unused-import
 import numpy as np
@@ -57,21 +57,17 @@ except ModuleNotFoundError:
     print('----------------------------------------------------------\n')
     import torch
 
-# NNSVSをimportできるようにする
-if exists(join(dirname(__file__), 'nnsvs-master')):
-    sys.path.append(join(dirname(__file__), 'nnsvs-master'))
-elif exists(join(dirname(__file__), 'nnsvs')):
-    sys.path.append(join(dirname(__file__), 'nnsvs'))
-else:
-    logging.error('NNSVS is not found.')
-if exists(join(dirname(__file__), 'HN-UnifiedSourceFilterGAN-nnsvs')):
-    sys.path.append(join(dirname(__file__), 'HN-UnifiedSourceFilterGAN-nnsvs'))
-else:
-    logging.error('uSFGAN is not found')
-if exists(join(dirname(__file__), 'SiFiGAN-nnsvs')):
-    sys.path.append(join(dirname(__file__), 'SiFiGAN-nnsvs'))
-else:
-    logging.error('SiFiGAN is not found')
+# NNSVS 等をimportできるようにする
+for package_dir in ('nnsvs-master',
+                    'HN-UnifiedSourceFilterGAN-nnsvs',
+                    'ParallelWaveGAN-nnsvs',
+                    'SiFiGAN-nnsvs'):
+    p = join(dirname(__file__), package_dir)
+    if exists(p):
+        sys.path.append(p)
+    else:
+        logging.error('Directory is not found: %s',package_dir)
+
 import nnsvs  # pylint: disable=import-error
 from nnsvs.svs import SPSVS
 from utils import enunu2nnsvs  # pylint: disable=import-error
@@ -571,7 +567,7 @@ class ENUNU(SPSVS):
         # return wav, self.sample_rate
 
 
-def main(path_plugin: str, path_wav: Union[str, None] = None):
+def main(path_plugin: str, path_wav: str | None = None):
     """
     UTAUプラグインのファイルから音声を生成する
     """
@@ -603,7 +599,7 @@ def main(path_plugin: str, path_wav: Union[str, None] = None):
             temp_dir = join(out_dir, f'{songname}_enutemp')
         # WAV出力パス指定なしかつUST未保存の場合
         else:
-            logging.info('USTが保存されていないのでデスクトップにWAV出力します。')
+            # logging.info('USTが保存されていないのでデスクトップにWAV出力します。')
             songname = f'temp__{str_now}'
             out_dir = mkdtemp(prefix='enunu-')
             temp_dir = join(out_dir, f'{songname}_enutemp')
@@ -664,10 +660,10 @@ def main(path_plugin: str, path_wav: Union[str, None] = None):
         del enuconfig
 
     # USTを一時フォルダに複製
-    print(f'{datetime.now()} : copying UST')
+    logging.info('Copying UST')
     shutil.copy2(path_plugin, engine.path_ust)
     # Tableファイルを一時フォルダに複製
-    print(f'{datetime.now()} : copying Table')
+    logging.info('Copying Table')
     shutil.copy2(find_table(model_dir), engine.path_table)
 
     # USTファイルを編集する
