@@ -1,10 +1,16 @@
+numpy<2
 colored_traceback
+cython
+flet
 h5py
-nnmnkwii
-nnsvs
-numpy
-torch
+hydra-core
+jaconv
+librosa
+light-the-torch
 utaupy
+pyworld
+# parallel_wavegan
+pyloudnorm
 pyyaml
-parallel_wavegan
-
+nnmnkwii
+# nnsvs
