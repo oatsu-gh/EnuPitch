@@ -583,7 +583,7 @@ def main(path_plugin: str, path_wav: str | None = None):
     voice_dir = abspath(join(
         dirname(__file__),
         'model',
-        'NamineRitsu_6CC_#4320_hed418_BEAT_WD_HN-uSFGAN'
+        'ENUNU_NamineRitsuCC_#4230_5styles_WD_HN-uSFGAN_BEAT'
     ))
     # --------------------------------------------------------------------------
 

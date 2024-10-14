@@ -23,7 +23,7 @@
 
 ### v0.2.0
 
-- 使用モデルを「波音リツ CRISSCROSS 6style world-diffusion HN-uSFGAN NNSVS/ENUNU hed418 BEATテスト #4320」に変更
+- 使用モデルを「波音リツ CRISSCROSS #4230 5style world-diffusion HN-uSFGAN BEAT」に変更
   - flag_separator.py を改造し、モデルのフォルダに flag_separator_for_enupitch.py を配置しています。
 - 歌唱スタイル指定用の拡張機能 enupitch_launcher_with_flet.py を追加
 - ほか、複数の拡張機能を追加
