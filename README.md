@@ -30,6 +30,10 @@
 - 同梱の python を 3.12.7 に更新
 - pytorch のインストールに light-the-torch を使うようにした
 
+## v0.2.1
+
+- 同梱モデルの拡張機能 beat_applier の一部パラメータが常に 4/4 になる不具合を (カノンさんが) 修正
+
 ## Python-Embed 環境構築のメモ
 
 ### python-3.12.7-embed-amd64 での環境構築手順
